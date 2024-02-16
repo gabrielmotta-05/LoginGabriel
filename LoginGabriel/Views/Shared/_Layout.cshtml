@@ -1,0 +1,81 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Seu Título</title>
+    <!-- Adicione links para arquivos CSS do Bootstrap ou outros estilos -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Adicione links para arquivos CSS customizados -->
+    @RenderSection("styles", required: false)
+</head>
+<body>
+
+    <!-- Barra de navegação -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Login</a>
+        <!-- Adicione links de navegação ou botões de login -->
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="#" data-toggle="modal" data-target="#loginModal">Login</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Cadastre-se</a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Conteúdo da página -->
+    <div class="container">
+        @RenderBody()
+    </div>
+
+    <!-- Rodapé -->
+    <footer class="footer">
+        <div class="container">
+            <span class="text-muted">Rodapé</span>
+        </div>
+    </footer>
+
+    <!-- Adicione links para arquivos JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    @* <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script> *@
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Adicione links para arquivos JavaScript customizados -->
+    @RenderSection("scripts", required: false)
+</body>
+</html>
+
+<!-- Modal de Login -->
+<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="loginModalLabel">Login</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="loginForm" action="@Url.Action("Login", "Account")" method="post">
+                    <!-- Campos do formulário de login aqui -->
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Senha:</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Entrar</button>
+                </form>
+                <div class="text-center mt-3">
+                    <a href="@Url.Action("ForgotPassword", "Account")">Esqueci minha senha</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
