@@ -133,7 +133,6 @@ public class AccountController : Controller
             return View();
         }
 
-        // Gerar nova senha aleatória ou enviar link para redefinição de senha (conforme diferencial)
 
         return RedirectToAction("Login", "Account");
     }

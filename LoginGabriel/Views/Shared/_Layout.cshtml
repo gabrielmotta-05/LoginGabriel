@@ -14,10 +14,10 @@
         <a class="navbar-brand" href="#">Login</a>
         <ul class="navbar-nav ml-auto">
             <li class="nav-item">
-                <a href="#" data-toggle="modal" data-target="#loginModal">Login</a>
+                <a href="#" data-toggle="modal" data-target="#loginModal" class="mr-2">Login</a>
             </li>
-            <li class="nav-item ml-2">
-                <a href="#" id="registerLink">Cadastre-se</a>
+            <li class="nav-item">
+                <a href="#" data-toggle="modal" data-target="#registerModal">Cadastre-se</a>
             </li>
         </ul>
     </nav>
@@ -34,36 +34,36 @@
 
     <script>
         $(document).ready(function () {
-            $("#registerLink").click(function () {
-                $("#registerModal").modal("show");
+            // Mostrar modal de login quando o botão "Login" é clicado
+            $("#loginButton").click(function () {
+                $("#loginModal").modal("show");
             });
 
-            $("#loginForm").submit(function (event) {
-                event.preventDefault(); 
+            // Mostrar modal de recuperação de senha quando o link "Esqueci minha senha" é clicado
+            $("#forgotPasswordLink").click(function () {
+                $("#forgotPasswordModal").modal("show");
+            });
 
-                var email = $("#loginEmail").val();
-                var password = $("#loginPassword").val();
+            // Lidar com o envio do formulário de recuperação de senha
+            $("#forgotPasswordForm").submit(function (event) {
+                event.preventDefault(); // Evita o envio do formulário tradicional
 
+                // Obter o email digitado pelo usuário
+                var email = $("#forgotPasswordEmail").val();
+
+                // Aqui você pode enviar uma requisição AJAX para o backend para processar a recuperação de senha
+                // Exemplo:
                 $.ajax({
-                    url: "/Account/Login",
+                    url: "/Account/ForgotPassword",
                     method: "POST",
-                    data: {
-                        email: email,
-                        password: password
-                    },
+                    data: { email: email },
                     success: function (response) {
-                        // Verificar se a autenticação foi bem-sucedida
-                        if (response.success) {
-                            // Redirecionar para a página de boas-vindas
-                            window.location.href = "/Home/Welcome";
-                        } else {
-                            // Exibir mensagem de erro para o usuário
-                            alert("Credenciais inválidas. Por favor, tente novamente.");
-                        }
+                        // Exibir mensagem de sucesso ou erro para o usuário
+                        alert(response.message);
                     },
                     error: function () {
                         // Exibir mensagem de erro genérica em caso de falha na requisição
-                        alert("Ocorreu um erro ao tentar fazer login. Por favor, tente novamente.");
+                        alert("Ocorreu um erro ao processar sua solicitação. Por favor, tente novamente.");
                     }
                 });
             });
@@ -95,9 +95,9 @@
                     </div>
                     <button type="submit" class="btn btn-primary">Entrar</button>
                 </form>
-                <div class="text-center mt-3">
-                    <a href="@Url.Action("ForgotPassword", "Account")">Esqueci minha senha</a>
-                </div>
+                <li class="nav-item">
+                    <a href="#" id="forgotPasswordLink">Esqueci minha senha</a>
+                </li>
             </div>
         </div>
     </div>
@@ -132,6 +132,28 @@
                         <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
                     </div>
                     <button type="submit" class="btn btn-primary">Cadastrar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal de Recuperação de Senha -->
+<div class="modal fade" id="forgotPasswordModal" tabindex="-1" role="dialog" aria-labelledby="forgotPasswordModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="forgotPasswordModalLabel">Recuperação de Senha</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="forgotPasswordForm">
+                    <div class="form-group">
+                        <label for="forgotPasswordEmail">Email:</label>
+                        <input type="email" class="form-control" id="forgotPasswordEmail" name="forgotPasswordEmail" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Enviar</button>
                 </form>
             </div>
         </div>
