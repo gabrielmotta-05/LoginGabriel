@@ -37,6 +37,16 @@
             }
         });
     });
+
+    // Abre o modal de cadastro quando o link "Cadastre-se" é clicado
+    $("#registerLink").click(function (e) {
+        e.preventDefault(); // Evita o comportamento padrão do link
+
+        // Abre o modal de cadastro
+        $("#registerModal").modal("show");
+    });
+
+    // Redireciona para a action ForgotPassword do AccountController quando o link "Esqueci minha senha" é clicado
     $("#forgotPasswordLink").click(function (e) {
         e.preventDefault(); // Evita que o link execute seu comportamento padrão (navegar para uma nova página)
 
@@ -44,4 +54,3 @@
         window.location.href = "@Url.Action("ForgotPassword", "Account")";
     });
 });
-

@@ -1,25 +1,22 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Data.Entity;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Security.Cryptography;
 using System.Text;
-using System.Web.Mvc;
 using LoginGabriel.Models;
 
 public class AccountController : Controller
 {
     private readonly ApplicationDbContext _context;
 
-    public AccountController()
+    public AccountController(ApplicationDbContext context)
     {
-        _context = new ApplicationDbContext();
+        _context = context;
     }
 
-    public ActionResult Register()
-    {
-        return View();
-    }
+    // Outros métodos do controlador
 
     [HttpPost]
     public ActionResult Register(RegisterViewModel model)
@@ -35,6 +32,10 @@ public class AccountController : Controller
             return View(model);
         }
 
+        // Verificar a força da senha
+        var passwordStrength = CalculatePasswordStrength(model.Password);
+
+        // Constroi o novo usuário
         var newUser = new User
         {
             Name = model.Name,
@@ -45,10 +46,50 @@ public class AccountController : Controller
         _context.Users.Add(newUser);
         _context.SaveChanges();
 
-        // Envie e-mail de confirmação (opcional)
+        // Envia e-mail de confirmação
+        SendConfirmationEmail(newUser.Email);
 
         return RedirectToAction("Login", "Account");
     }
+
+    // Método para calcular a força da senha
+    private int CalculatePasswordStrength(string password)
+    {
+        int strength = 0;
+        if (password.Length >= 8) strength++; // Verifica o comprimento mínimo da senha
+        if (password.Any(char.IsUpper)) strength++; // Verifica se a senha contém letras maiúsculas
+        if (password.Any(char.IsLower)) strength++; // Verifica se a senha contém letras minúsculas
+        if (password.Any(char.IsDigit)) strength++; // Verifica se a senha contém números
+        if (password.Any(ch => !char.IsLetterOrDigit(ch))) strength++; // Verifica se a senha contém caracteres especiais
+        return strength;
+    }
+
+    // Método para enviar e-mail de confirmação
+    private void SendConfirmationEmail(string email)
+    {
+        var message = new MailMessage();
+        message.To.Add(new MailAddress(email)); // Endereço de e-mail do destinatário
+        message.Subject = "Confirmação de Cadastro de usuário";
+        message.Body = "Seu cadastro foi confirmado com sucesso.";
+
+        using (var smtpClient = new SmtpClient("smtp.example.com"))
+        {
+            smtpClient.Port = 587; // Porta SMTP
+            smtpClient.UseDefaultCredentials = false;
+            smtpClient.Credentials = new NetworkCredential("exemplo@gmail.com", "senha"); // email que será enviado a confirmação
+            smtpClient.EnableSsl = true; // Habilita SSL/TLS
+
+            try
+            {
+                smtpClient.Send(message);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Erro ao enviar e-mail de confirmação: {ex.Message}");
+            }
+        }
+    }
+
 
     public ActionResult Login()
     {
@@ -72,8 +113,6 @@ public class AccountController : Controller
             ModelState.AddModelError("", "Credenciais inválidas.");
             return View(model);
         }
-
-        // Armazenar informações do usuário em cookie ou session (opcional)
 
         return RedirectToAction("Index", "Home");
     }

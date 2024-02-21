@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - Seu Título</title>
-    <!-- Adicione links para arquivos CSS do Bootstrap ou outros estilos -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <!-- Adicione links para arquivos CSS customizados -->
     @RenderSection("styles", required: false)
 </head>
 <body>
@@ -14,35 +12,63 @@
     <!-- Barra de navegação -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="#">Login</a>
-        <!-- Adicione links de navegação ou botões de login -->
         <ul class="navbar-nav ml-auto">
             <li class="nav-item">
-                <a class="nav-link" href="#" data-toggle="modal" data-target="#loginModal">Login</a>
+                <a href="#" data-toggle="modal" data-target="#loginModal">Login</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Cadastre-se</a>
+            <li class="nav-item ml-2">
+                <a href="#" id="registerLink">Cadastre-se</a>
             </li>
         </ul>
     </nav>
+
 
     <!-- Conteúdo da página -->
     <div class="container">
         @RenderBody()
     </div>
 
-    <!-- Rodapé -->
-    <footer class="footer">
-        <div class="container">
-            <span class="text-muted">Rodapé</span>
-        </div>
-    </footer>
-
-    <!-- Adicione links para arquivos JavaScript -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    @* <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script> *@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <!-- Adicione links para arquivos JavaScript customizados -->
     @RenderSection("scripts", required: false)
+
+    <script>
+        $(document).ready(function () {
+            $("#registerLink").click(function () {
+                $("#registerModal").modal("show");
+            });
+
+            $("#loginForm").submit(function (event) {
+                event.preventDefault(); 
+
+                var email = $("#loginEmail").val();
+                var password = $("#loginPassword").val();
+
+                $.ajax({
+                    url: "/Account/Login",
+                    method: "POST",
+                    data: {
+                        email: email,
+                        password: password
+                    },
+                    success: function (response) {
+                        // Verificar se a autenticação foi bem-sucedida
+                        if (response.success) {
+                            // Redirecionar para a página de boas-vindas
+                            window.location.href = "/Home/Welcome";
+                        } else {
+                            // Exibir mensagem de erro para o usuário
+                            alert("Credenciais inválidas. Por favor, tente novamente.");
+                        }
+                    },
+                    error: function () {
+                        // Exibir mensagem de erro genérica em caso de falha na requisição
+                        alert("Ocorreu um erro ao tentar fazer login. Por favor, tente novamente.");
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>
 
@@ -60,12 +86,12 @@
                 <form id="loginForm" action="@Url.Action("Login", "Account")" method="post">
                     <!-- Campos do formulário de login aqui -->
                     <div class="form-group">
-                        <label for="email">Email:</label>
-                        <input type="email" class="form-control" id="email" name="email" required>
+                        <label for="loginEmail">Email:</label>
+                        <input type="email" class="form-control" id="loginEmail" name="email" required>
                     </div>
                     <div class="form-group">
-                        <label for="password">Senha:</label>
-                        <input type="password" class="form-control" id="password" name="password" required>
+                        <label for="loginPassword">Senha:</label>
+                        <input type="password" class="form-control" id="loginPassword" name="password" required>
                     </div>
                     <button type="submit" class="btn btn-primary">Entrar</button>
                 </form>
@@ -77,5 +103,37 @@
     </div>
 </div>
 
-
-
+<!-- Modal de Cadastro -->
+<div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="registerModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="registerModalLabel">Cadastro</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="registerForm" action="@Url.Action("Register", "Account")" method="post">
+                    <div class="form-group">
+                        <label for="registerName">Nome:</label>
+                        <input type="text" class="form-control" id="registerName" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerEmail">Email:</label>
+                        <input type="email" class="form-control" id="registerEmail" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerPassword">Senha:</label>
+                        <input type="password" class="form-control" id="registerPassword" name="password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirme a Senha:</label>
+                        <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Cadastrar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
