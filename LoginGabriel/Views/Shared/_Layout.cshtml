@@ -34,35 +34,27 @@
 
     <script>
         $(document).ready(function () {
-            // Mostrar modal de login quando o botão "Login" é clicado
             $("#loginButton").click(function () {
                 $("#loginModal").modal("show");
             });
 
-            // Mostrar modal de recuperação de senha quando o link "Esqueci minha senha" é clicado
             $("#forgotPasswordLink").click(function () {
                 $("#forgotPasswordModal").modal("show");
             });
 
-            // Lidar com o envio do formulário de recuperação de senha
             $("#forgotPasswordForm").submit(function (event) {
-                event.preventDefault(); // Evita o envio do formulário tradicional
+                event.preventDefault(); 
 
-                // Obter o email digitado pelo usuário
                 var email = $("#forgotPasswordEmail").val();
 
-                // Aqui você pode enviar uma requisição AJAX para o backend para processar a recuperação de senha
-                // Exemplo:
                 $.ajax({
                     url: "/Account/ForgotPassword",
                     method: "POST",
                     data: { email: email },
                     success: function (response) {
-                        // Exibir mensagem de sucesso ou erro para o usuário
                         alert(response.message);
                     },
                     error: function () {
-                        // Exibir mensagem de erro genérica em caso de falha na requisição
                         alert("Ocorreu um erro ao processar sua solicitação. Por favor, tente novamente.");
                     }
                 });
