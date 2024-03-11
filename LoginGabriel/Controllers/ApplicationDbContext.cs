@@ -1,8 +1,10 @@
-﻿using System.Data.Entity;
+﻿using Microsoft.EntityFrameworkCore;
+using LoginGabriel.Models;
 
 public class ApplicationDbContext : DbContext
 {
-    public ApplicationDbContext() : base("connectionstring")
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+        : base(options)
     {
     }
 
