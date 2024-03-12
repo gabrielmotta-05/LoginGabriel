@@ -140,7 +140,7 @@ public class AccountController : Controller
         // Enviar e-mail com o link de redefinição de senha
         SendPasswordResetEmail(user.Email, token);
 
-        return RedirectToAction("Login", "Account");
+        return RedirectToAction("Layout", "Shared");
     }
 
     // Método para enviar e-mail de redefinição de senha
@@ -182,15 +182,13 @@ public class AccountController : Controller
         if (user == null)
         {
             // Token inválido ou expirado
-            return RedirectToAction("Login", "Account");
+            return RedirectToAction("Layout", "Shared");
         }
 
         // Exiba uma página de redefinição de senha para o usuário
         return View(new ResetPasswordViewModel { Email = email, Token = token });
     }
 
-    // Método para processar a redefinição de senha
-    [HttpPost]
     public ActionResult ResetPassword(ResetPasswordViewModel model)
     {
         if (!ModelState.IsValid)
@@ -204,18 +202,19 @@ public class AccountController : Controller
         if (user == null)
         {
             // Token inválido ou expirado
-            return RedirectToAction("Login", "Account");
+            return RedirectToAction("Layout", "Shared");
         }
 
         // Define a nova senha para o usuário e limpa o token de redefinição de senha
-        user.Password = EncryptPassword(model.Password);
+        user.Password = EncryptPassword(model.NewPassword); // Usando a nova senha fornecida no ViewModel
         user.ResetPasswordToken = null;
         user.ResetPasswordTokenExpiry = null;
         _context.SaveChanges();
 
         // Redireciona o usuário para a página de login
-        return RedirectToAction("Login", "Account");
+        return RedirectToAction("Layout", "Shared");
     }
+
 
     // Método para criptografar a senha
     private string EncryptPassword(string password)
