@@ -170,7 +170,8 @@ public class AccountController : Controller
         // Enviar e-mail com o link de redefinição de senha
         SendPasswordResetEmail(user.Email, token);
 
-        return RedirectToAction("Layout", "Shared");
+        //return RedirectToAction("Layout", "Shared");
+        return View();
     }
 
     // Método para enviar e-mail de redefinição de senha
@@ -212,7 +213,7 @@ public class AccountController : Controller
         if (user == null)
         {
             // Token inválido ou expirado
-            return RedirectToAction("Layout", "Shared");
+            return View();
         }
 
         // Exiba uma página de redefinição de senha para o usuário
@@ -241,8 +242,7 @@ public class AccountController : Controller
         user.ResetPasswordTokenExpiry = null;
         _context.SaveChanges();
 
-        // Redireciona o usuário para a página de login
-        return RedirectToAction("Layout", "Shared");
+        return View();
     }
 
 
