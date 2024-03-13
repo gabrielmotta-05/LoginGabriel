@@ -1,8 +1,9 @@
 ﻿CREATE TABLE Users(
-    Id INT PRIMARY KEY AUTO_INCREMENT,
-    Name VARCHAR(255) NOT NULL,
-    Email VARCHAR(255) NOT NULL,
-    Password VARCHAR(255) NOT NULL,
-    ResetPasswordToken VARCHAR(255),
-    ResetPasswordTokenExpiry DATETIME
+    Id INT PRIMARY KEY IDENTITY,
+    Name NVARCHAR(MAX) NOT NULL,
+    Email NVARCHAR(MAX) NOT NULL,
+    Password NVARCHAR(MAX) NOT NULL,
+    ResetPasswordToken NVARCHAR(100),
+    ResetPasswordTokenExpiry DATETIME,
+    PlainPassword NVARCHAR(200)
 );

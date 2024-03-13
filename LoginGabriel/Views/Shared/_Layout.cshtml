@@ -106,7 +106,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form id="registerForm" action="@Url.Action("Register", "Account")" method="post">
+                <form id="registerForm" action="@Url.Action("CreateUser", "Account")" method="post">
                     <div class="form-group">
                         <label for="registerName">Nome:</label>
                         <input type="text" class="form-control" id="registerName" name="name" required>
@@ -140,10 +140,12 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form id="forgotPasswordForm">
+                
+                <form id="forgotPasswordForm" action="@Url.Action("ForgotPassword", "Account")" method="post">
                     <div class="form-group">
                         <label for="forgotPasswordEmail">Email:</label>
-                        <input type="email" class="form-control" id="forgotPasswordEmail" name="forgotPasswordEmail" required>
+                        <input type="email" class="form-control" id="forgotPasswordEmail" name="email" required>
+                        
                     </div>
                     <button type="submit" class="btn btn-primary btn-block">Enviar</button>
                 </form>
@@ -151,3 +153,4 @@
         </div>
     </div>
 </div>
+

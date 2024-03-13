@@ -37,8 +37,32 @@ public class AccountController : Controller
         return Ok(user);
     }
 
-    // Endpoint para criar um novo usuário
+    [HttpGet]
+    public IActionResult Login()
+    {
+        return View();
+    }
+
     [HttpPost]
+    public IActionResult Login(LoginViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View(model);
+        }
+
+        // Verifica se o usuário existe no banco de dados
+        var user = _context.Users.FirstOrDefault(u => u.Email == model.Email && u.Password == EncryptPassword(model.Password));
+
+        if (user == null)
+        {
+            ModelState.AddModelError("", "Credenciais inválidas.");
+            return View(model);
+        }
+
+        return Ok(new { message = "Login realizado com sucesso." });
+    }
+
     public IActionResult CreateUser(User newUser)
     {
         if (!ModelState.IsValid)
@@ -46,8 +70,14 @@ public class AccountController : Controller
             return BadRequest(ModelState);
         }
 
+        // Criptografa a senha antes de salvar o usuário
+        newUser.Password = EncryptPassword(newUser.Password);
+
         _context.Users.Add(newUser);
         _context.SaveChanges();
+
+        // Limpa a senha não criptografada do objeto para evitar expô-la indevidamente
+        //newUser.PlainPassword = null;
 
         return CreatedAtAction(nameof(GetUserById), new { id = newUser.Id }, newUser);
     }
